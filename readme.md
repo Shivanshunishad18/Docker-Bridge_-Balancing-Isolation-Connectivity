@@ -27,13 +27,13 @@ A **custom bridge network** offers several advantages:
 ✅ **DNS-Based Resolution** – Containers communicate via names instead of IPs.
 ✅ **Greater Control** – Define specific **subnets, IP ranges, and gateways**.
 
-To demonstrate, we create a **custom bridge network** called `uday-bridge` and connect multiple containers.
+To demonstrate, we create a **custom bridge network** called `shivanshu-bridge` and connect multiple containers.
 
 ---
 
 ## 🔧 1. Creating a Custom Bridge Network
 ```bash
-docker network create --driver bridge --subnet 172.20.0.0/16 --ip-range 172.20.240.0/20 uday-bridge
+docker network create --driver bridge --subnet 172.20.0.0/16 --ip-range 172.20.240.0/20 shivanshu-bridge
 ```
 ### 🔍 Explanation:
 - `--driver bridge` → Uses the default **bridge network mode**.
@@ -43,57 +43,57 @@ docker network create --driver bridge --subnet 172.20.0.0/16 --ip-range 172.20.2
 ---
 
 ## 🚀 2. Running Containers in the Custom Network
-### Running **Redis Container** (`uday-database`)
+### Running **Redis Container** (`shivanshu-database`)
 ```bash
-docker run -itd --net=uday-bridge --name=uday-database redis
+docker run -itd --net=shivanshu-bridge --name=shivanshu-database redis
 ```
-### Running **BusyBox Container** (`uday-server-A`)
+### Running **BusyBox Container** (`shivanshu-server-A`)
 ```bash
-docker run -itd --net=uday-bridge --name=uday-server-A busybox
+docker run -itd --net=uday-bridge --name=shivanshu-server-A busybox
 ```
 
 ### 📌 Check Container IPs
 ```bash
-docker network inspect uday-bridge
+docker network inspect shivanshuy-bridge
 ```
 Expected Output:
 ```
- uday-database: 172.20.240.1
- uday-server-A: 172.20.240.2
+shivanshu-database: 172.20.240.1
+shivanshuy-server-A: 172.20.240.2
 ```
 
 ---
 
 ## 📔 3. Testing Communication Between Containers
-### Ping from **uday-database** to **uday-server-A**
+### Ping from **shivanshu-database** to **shivanshu-server-A**
 ```bash
-docker exec -it uday-database ping 172.20.240.2
+docker exec -it shivanshu-database ping 172.20.240.2
 ```
-### Ping from **uday-server-A** to **uday-database**
+### Ping from **shivanshu-server-A** to **shivanshu-database**
 ```bash
-docker exec -it uday-server-A ping 172.20.240.1
+docker exec -it shivanshu-server-A ping 172.20.240.1
 ```
 ✅ Expected Outcome: Both containers should successfully **ping** each other.
 
 ---
 
 ## 🚧 4. Demonstrating Network Isolation with a Third Container
-We add another container (`uday-server-B`) on the **default bridge network**.
+We add another container (`shivanshu-server-B`) on the **default bridge network**.
 ```bash
-docker run -itd --name=uday-server-B busybox
+docker run -itd --name=shivanshu-server-B busybox
 ```
-### 📌 Get IP of `uday-server-B`
+### 📌 Get IP of shivanshu-server-B`
 ```bash
-docker inspect -format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' uday-server-B
+docker inspect -format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' shivanshu-server-B
 ```
 (Example IP: `172.17.0.2`)
 
 ---
 
 ## ❌ 5. Testing Communication Between Different Networks
-Ping from `uday-database` to `uday-server-B`:
+Ping from shivanshu-database` to `shivanshu-server-B`:
 ```bash
-docker exec -it uday-database ping 172.17.0.2
+docker exec -it shivanshu-database ping 172.17.0.2
 ```
 🚨 **Expected Outcome:** The ping should **fail**, as they are on different networks.
 
@@ -102,11 +102,11 @@ docker exec -it uday-database ping 172.17.0.2
 ## 🔍 6. Confirming Network Isolation
 ### Inspect Networks
 ```bash
-docker network inspect uday-bridge
+docker network inspect shivanshu-bridge
 docker network inspect bridge
 ```
-✅ `uday-bridge` should contain `uday-database` & `uday-server-A`.
-✅ `bridge` should contain `uday-server-B`.
+✅ `shivanshu-bridge` should contain `shivanshu-database` & `shivanshu-server-A`.
+✅ `bridge` should contain `shivanshu-server-B`.
 
 ---
 
